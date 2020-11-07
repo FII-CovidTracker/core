@@ -52,20 +52,16 @@ public class UserControllerIt {
     }
 
     @Test
-    public void deleteUserById_shouldThrowEntityNotFound_WhenIdIs12(){
+    public void deleteUserById_shouldThrowEntityNotFound_WhenIdIs500(){
         HttpEntity<Void> request = new HttpEntity<>(null);
         HttpClientErrorException exception = Assertions.catchThrowableOfType(() ->
-                restTemplate.exchange("/user/12", HttpMethod.DELETE, request, Void.class), HttpClientErrorException.class);
+                restTemplate.exchange("/user/500", HttpMethod.DELETE, request, Void.class), HttpClientErrorException.class);
 //        System.out.println(exception.getLocalizedMessage());
         Assertions.assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     public void deleteUserById_shouldThrowNoContent_WhenIdIs9() {
-//        System.out.println(userRepository.getOne(9L));
-//        for (User user : userRepository.findAll()) {
-//            System.out.println(user.getId());
-//        }
         HttpEntity<Void> request = new HttpEntity<>(null);
         ResponseEntity<Void> response = restTemplate.exchange("/user/9", HttpMethod.DELETE, request, Void.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
