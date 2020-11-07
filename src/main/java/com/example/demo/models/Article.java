@@ -1,6 +1,8 @@
 package com.example.demo.models;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "ctk_article")
 public class Article {
 
@@ -32,4 +35,5 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "authority_id")
     private Authority authority;
+
 }

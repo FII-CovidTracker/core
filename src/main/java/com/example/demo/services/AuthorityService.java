@@ -20,7 +20,7 @@ public class AuthorityService {
                 .collect(Collectors.toList());
     }
 
-    private AuthorityDto authorityToAuthorityDto(Authority authority) {
+    public AuthorityDto authorityToAuthorityDto(Authority authority) {
         return AuthorityDto.builder()
                 .address(authority.getAddress())
                 .canVerifyCases(authority.getCanVerifyCases())

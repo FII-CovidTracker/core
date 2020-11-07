@@ -1,6 +1,8 @@
 package com.example.demo.aspects;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -18,8 +20,12 @@ public class ControllerAspect {
 
     }
 
-    @Before("pointCutOnAnyEndPoint()")
-    public void adviceOnPointCutOnAnyEndPoint(JoinPoint jp) {
-        logger.info(String.format("A call to the endpoint %s will be handled", jp.getSignature()));
+    @Around("pointCutOnAnyEndPoint()")
+    public Object adviceOnPointCutOnAnyEndPoint(ProceedingJoinPoint jp) throws Throwable {
+        Long start = System.currentTimeMillis();
+        Object result = jp.proceed();
+        Long finish = System.currentTimeMillis();
+        logger.info(String.format("A call to the endpoint %s was made and it took %d seconds", jp.getSignature(),finish-start));
+        return result;
     }
 }

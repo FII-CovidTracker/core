@@ -20,12 +20,13 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    private ArticleDto articleToArticleDto(Article article) {
+    public ArticleDto articleToArticleDto(Article article) {
         return ArticleDto.builder()
                 .author(article.getAuthorName())
                 .localDate(article.getPublishDate())
                 .markDownContent(article.getMarkdownContent())
                 .title(article.getTitle())
                 .build();
+
     }
 }

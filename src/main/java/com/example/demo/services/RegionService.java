@@ -16,7 +16,7 @@ public class RegionService {
     @Autowired
     private RegionRepository regionRepository;
 
-    private RegionDto regionToRegionDto(Region region){
+    public RegionDto regionToRegionDto(Region region){
         return RegionDto.builder()
                 .isGlobal(region.isGlobal())
                 .name(region.getName())
