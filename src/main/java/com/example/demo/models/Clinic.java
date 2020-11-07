@@ -1,11 +1,16 @@
 package com.example.demo.models;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "ctk_clinic")
 public class Clinic {
     @Id
