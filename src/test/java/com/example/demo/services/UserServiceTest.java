@@ -1,19 +1,14 @@
 package com.example.demo.services;
 
-
 import com.example.demo.dto.UserDto;
 import com.example.demo.models.User;
-import com.example.demo.repositories.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,15 +29,28 @@ import static org.assertj.core.api.Assertions.assertThat;
         String givenMail = "mail";
         String givenName = "name";
         String givenPassword = "password";
-        UserDto givenUserDto = getOtherUserDto(givenMail, givenName, givenPassword);
-        User expectedUser = getOtherUser(givenMail, givenName, givenPassword);
+        UserDto givenUserDto = getUserDto(givenMail, givenName, givenPassword);
+        User expectedUser = getUser(givenMail, givenName, givenPassword);
 
         User actualUser = userService.userDtoToUser(givenUserDto);
         assertThat(expectedUser).isEqualToComparingOnlyGivenFields(actualUser, "name", "email", "password");
 
     }
 
-    private User getOtherUser(String email, String name, String password) {
+    @Test
+    public void userToUserDtoTest() {
+        String givenMail = "mail";
+        String givenName = "name";
+        String givenPassword = "password";
+        UserDto expectedUserDto = getUserDto(givenMail, givenName, givenPassword);
+        User givenClinicUser = getUser(givenMail, givenName, givenPassword);
+
+        UserDto actualUserDto = userService.userToUserDto(givenClinicUser);
+        assertThat(expectedUserDto).isEqualToComparingOnlyGivenFields(actualUserDto, "name", "email", "password");
+
+    }
+
+    private User getUser(String email, String name, String password) {
         User user = new User();
         user.setPassword(password);
         user.setName(name);
@@ -50,7 +58,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         return user;
     }
 
-    private UserDto getOtherUserDto(String email, String name, String password) {
+    private UserDto getUserDto(String email, String name, String password) {
         return UserDto.builder()
                 .email(email)
                 .name(name)

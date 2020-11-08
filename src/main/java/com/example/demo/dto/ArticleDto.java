@@ -7,10 +7,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class ArticleDto {
     private String author;
     private String title;
-    private String markDownContent;
-    private LocalDate localDate;
+    private String markdownContent;
+    private LocalDate publishDate;
 }
