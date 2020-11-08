@@ -20,13 +20,27 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
+    public void saveArticle(ArticleDto articleDto) {
+        Article article = articleDtoToArticle(articleDto);
+        articleRepository.save(article);
+    }
+
     public ArticleDto articleToArticleDto(Article article) {
         return ArticleDto.builder()
                 .author(article.getAuthorName())
-                .localDate(article.getPublishDate())
-                .markDownContent(article.getMarkdownContent())
+                .publishDate(article.getPublishDate())
+                .markdownContent(article.getMarkdownContent())
                 .title(article.getTitle())
                 .build();
 
+    }
+
+    public Article articleDtoToArticle(ArticleDto articleDto) {
+        Article article = new Article();
+        article.setAuthorName(articleDto.getAuthor());
+        article.setTitle(articleDto.getTitle());
+        article.setMarkdownContent(articleDto.getMarkdownContent());
+        article.setPublishDate(articleDto.getPublishDate());
+        return article;
     }
 }
