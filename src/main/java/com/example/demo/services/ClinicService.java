@@ -32,6 +32,12 @@ public class ClinicService {
         System.out.println(clinic);
         clinicRepository.delete(clinic);
     }
+
+    public ClinicDto findById(Long id) {
+        Clinic clinic = clinicRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Clinic", id));
+        return clinicToClinicDto(clinic);
+
+    }
     
     public ClinicDto clinicToClinicDto(Clinic clinic) {
         return ClinicDto.builder()

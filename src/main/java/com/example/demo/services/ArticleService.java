@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.Exceptions.EntityNotFoundException;
 import com.example.demo.dto.ArticleDto;
 import com.example.demo.models.Article;
 import com.example.demo.repositories.ArticleRepository;
@@ -20,13 +21,38 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
+    public void saveArticle(ArticleDto articleDto) {
+        Article article = articleDtoToArticle(articleDto);
+        articleRepository.save(article);
+    }
+
+    public void deleteById(Long id) {
+        Article region = articleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Article", id));
+        articleRepository.delete(region);
+    }
+
+    public ArticleDto findById(Long id) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Article", id));
+        return articleToArticleDto(article);
+
+    }
+
     public ArticleDto articleToArticleDto(Article article) {
         return ArticleDto.builder()
                 .author(article.getAuthorName())
-                .localDate(article.getPublishDate())
-                .markDownContent(article.getMarkdownContent())
+                .publishDate(article.getPublishDate())
+                .markdownContent(article.getMarkdownContent())
                 .title(article.getTitle())
                 .build();
 
+    }
+
+    public Article articleDtoToArticle(ArticleDto articleDto) {
+        Article article = new Article();
+        article.setAuthorName(articleDto.getAuthor());
+        article.setTitle(articleDto.getTitle());
+        article.setMarkdownContent(articleDto.getMarkdownContent());
+        article.setPublishDate(articleDto.getPublishDate());
+        return article;
     }
 }

@@ -35,4 +35,10 @@ public class ClinicsController {
     public void deleteById(@PathVariable @Valid @Min(1) Long id) {
         clinicService.deleteById(id);
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ClinicDto getById(@PathVariable @Valid Long id) {
+       return clinicService.findById(id);
+    }
 }

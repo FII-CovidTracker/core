@@ -5,15 +5,17 @@ import com.example.demo.helpers.ArticleMocker;
 import com.example.demo.repositories.ArticleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import static org.assertj.core.api.Assertions.assertThat;
 
-
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -24,13 +26,11 @@ public class ArticleControllerIt {
 
     @BeforeEach
     public void init() {
-
         restTemplate = new RestTemplate();
         restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8080"));
 
 
-     ArticleMocker.addMockedArticles(articleRepository);
-        System.out.println(articleRepository.findAll().size());
+        ArticleMocker.addMockedArticles(articleRepository);
     }
 
     @Test
@@ -38,4 +38,26 @@ public class ArticleControllerIt {
         List<ArticleDto> articleDtos = restTemplate.getForObject("/article", List.class);
         assertThat(articleDtos).isNotEmpty();
     }
+
+    @Test
+    public void saveOneShouldSaveOne() {
+        ArticleDto givenArticleDto = getArticleDto("author", "title", "markdown", LocalDate.of(2020, Month.NOVEMBER, 10));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        ResponseEntity<ArticleDto> responseEntity = restTemplate.exchange("/article", HttpMethod.POST, new HttpEntity<>(givenArticleDto, headers), ArticleDto.class);
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(HttpStatus.CREATED.value());
+
+    }
+
+    private ArticleDto getArticleDto(String author, String title, String markdown, LocalDate date) {
+        return ArticleDto.builder()
+                .author(author)
+                .title(title)
+                .markdownContent(markdown)
+                .publishDate(date)
+                .build();
+    }
+
+
 }

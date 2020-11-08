@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.Exceptions.EntityNotFoundException;
 import com.example.demo.dto.AuthorityDto;
 import com.example.demo.models.Authority;
 import com.example.demo.repositories.AuthorityRepository;
@@ -18,6 +19,17 @@ public class AuthorityService {
         return authorityRepository.findAll().stream()
                 .map(authority -> authorityToAuthorityDto(authority))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteById(Long id) {
+        Authority region = authorityRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Authority", id));
+        authorityRepository.delete(region);
+    }
+
+    public AuthorityDto findById(Long id) {
+        Authority authority = authorityRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Authority", id));
+        return authorityToAuthorityDto(authority);
+
     }
 
     public AuthorityDto authorityToAuthorityDto(Authority authority) {
