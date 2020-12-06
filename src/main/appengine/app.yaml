@@ -1,10 +1,11 @@
 runtime: java11
+service: be
 entrypoint: java -jar demo-0.0.1-SNAPSHOT.war com.example.demo.DemoApplication
 vpc_access_connector:
-  name: projects/fii-covidtracker/locations/europe-west3/connectors/covid-tracker-connector
+  name: <connector>
 env_variables:
-  CLOUD_SQL_USERNAME: postgres
-  CLOUD_SQL_PASSWORD: <put_password_here>
-  CLOUD_SQL_DATABASE_NAME: postgres
-  CLOUD_SQL_CONNECTION_NAME: fii-covidtracker:europe-west3:fii-covidtracker-db
+  CLOUD_SQL_USERNAME: <username>
+  CLOUD_SQL_PASSWORD: <password>
+  CLOUD_SQL_DATABASE_NAME: <dbname>
+  CLOUD_SQL_CONNECTION_NAME: <conenction_name>
 instance_class: F4
