@@ -1,9 +1,12 @@
 package com.example.demo.aspects;
 
 import com.example.demo.Exceptions.InvalidArgumentException;
+import org.apache.tomcat.jni.Proc;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
@@ -29,10 +32,6 @@ public class ControllerAspect {
 
     }
 
-    @Pointcut("execution(* com.example.demo.controllers.*.*(..))")
-    public void pointCutOnAnyEndPoint() {
-
-    }
 
     @Around("getByIdAndDeleteByIdAndId(id)")
     public Object adviceOngetDeleteByIdAndId(ProceedingJoinPoint pjp, Long id) throws Throwable {
@@ -43,13 +42,16 @@ public class ControllerAspect {
             return pjp.proceed();
         }
     }
-//
-//    @Around("pointCutOnAnyEndPoint()")
-//    public Object adviceOnPointCutOnAnyEndPoint(ProceedingJoinPoint jp) throws Throwable {
-//        Long start = System.currentTimeMillis();
-//        Object result = jp.proceed();
-//        Long finish = System.currentTimeMillis();
-//        logger.info(String.format("A call to the endpoint %s was made and it took %d seconds", jp.getSignature(), finish - start));
-//        return result;
-//    }
+
+    @Pointcut("execution(* com.example.demo.controllers.*.*(..))")
+    public void loggingJoinPoint(){
+
+    }
+    @Around("loggingJoinPoint()")
+    public void adivceOnloggingJoinPoint(ProceedingJoinPoint pjp) throws Throwable {
+        System.out.println(pjp.getSignature().getDeclaringTypeName());
+        pjp.proceed();
+    }
+
+
 }
