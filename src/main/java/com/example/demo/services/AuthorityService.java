@@ -1,12 +1,16 @@
 package com.example.demo.services;
 
 import com.example.demo.Exceptions.EntityNotFoundException;
+import com.example.demo.auth.TokenAuthorization;
 import com.example.demo.dto.AuthorityDto;
 import com.example.demo.models.Authority;
 import com.example.demo.repositories.AuthorityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,4 +51,10 @@ public class AuthorityService {
                 .build();
     }
 
+    public AuthorityDto loginAuthority() {
+        String accessToken = TokenAuthorization.getAccessToken();
+        System.out.println(accessToken);
+        System.out.println(TokenAuthorization.isRequestAuthorized(accessToken));
+        return null;
+    }
 }

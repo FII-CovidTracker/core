@@ -30,6 +30,9 @@ public class Authority {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "hashedPassword")
+    private String hashedPassword;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 

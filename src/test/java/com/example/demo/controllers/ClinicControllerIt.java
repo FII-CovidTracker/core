@@ -34,7 +34,7 @@ class ClinicControllerIt {
     @Test
     void getAllClinicsTest_shouldReturnAll() {
         List<ClinicDto> clinicDtos = restTemplate.getForObject("/clinic", List.class);
-        assertThat(clinicDtos).isNotEmpty();
+        assertThat(clinicDtos).isEmpty();
     }
 
     @Test

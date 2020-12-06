@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 
@@ -33,5 +37,11 @@ public class AuthorityController {
     @ResponseStatus(HttpStatus.OK)
     public AuthorityDto getById(@PathVariable @Valid Long id) {
         return authorityService.findById(id);
+    }
+
+    @GetMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public AuthorityDto login() {
+        return authorityService.loginAuthority();
     }
 }
