@@ -32,7 +32,7 @@ public class TokenAuthorization {
     }
 
     public static String getAccessToken() {
-        HttpURLConnection connection = null;
+        HttpURLConnection connection;
         try {
             URL getAccessTokenUrl = new URL("https://covidtracker-auth.nw.r.appspot.com/api/token");
             connection = (HttpURLConnection) getAccessTokenUrl.openConnection();
@@ -57,19 +57,17 @@ public class TokenAuthorization {
     }
 
     public static boolean isRequestAuthorized(String accessToken) {
-        HttpURLConnection connection = null;
+        HttpURLConnection connection;
         try {
-            URL authorizeRequestUrl = new URL("https://covidtracker-auth.nw.r.appspot.com/api/sa");
+            URL authorizeRequestUrl = new URL("https://covidtracker-auth.nw.r.appspot.com/api/authorize");
             connection = (HttpURLConnection) authorizeRequestUrl.openConnection();
             connection.setRequestMethod("GET");
-            //connection.setRequestProperty("Content-Type","application/json");
-            //connection.addRequestProperty("Authorization", accessToken);
+            connection.setRequestProperty("Content-Type","application/json");
+            connection.setRequestProperty("Authorization", "Bearer " + accessToken);
             connection.setDoOutput(true);
-            OutputStream os = connection.getOutputStream();
-            os.close();
-            System.out.println(connection.getResponseCode());
-            //String response = readResponse(connection);
-            //System.out.println(response);
+            String response = readResponse(connection);
+            System.out.println(response);
+            return connection.getResponseCode() == 200;
         }
         catch(IOException e) {
             e.printStackTrace();
