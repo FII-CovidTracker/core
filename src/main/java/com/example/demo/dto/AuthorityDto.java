@@ -15,6 +15,7 @@ public class AuthorityDto {
     private String name;
     private Boolean canVerifyCases;
     private String address;
+    private String hashedPassword;
     private String email;
     private String phoneNumber;
     private String region;
