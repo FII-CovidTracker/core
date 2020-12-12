@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 
+import com.example.demo.models.Region;
 import lombok.*;
 
 import java.util.LinkedList;
@@ -16,8 +17,8 @@ public class AuthorityDto {
     private String name;
     private Boolean canVerifyCases;
     private String address;
-    private String hashedPassword;
+    private String password;
     private String email;
     private String phoneNumber;
-    private String region;
+    private long region_id;
 }

@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class Article {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 

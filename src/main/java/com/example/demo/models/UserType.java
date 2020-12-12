@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "ctk_user_type")
 public class UserType {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="id")
     private Long id;
 

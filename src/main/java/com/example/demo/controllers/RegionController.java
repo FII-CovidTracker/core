@@ -22,6 +22,13 @@ public class RegionController {
         return regionService.findAll();
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public RegionDto save(@RequestBody RegionDto regionDto) {
+        regionService.saveRegion(regionDto);
+        return regionDto;
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable @Valid  Long id) {

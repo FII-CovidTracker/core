@@ -24,6 +24,13 @@ public class AuthorityController {
         return authorityService.findAll();
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthorityDto save(@RequestBody AuthorityDto authorityDto) {
+        authorityService.saveAuthority(authorityDto);
+        return authorityDto;
+    }
+    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable @Valid Long id) {

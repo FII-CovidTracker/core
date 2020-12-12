@@ -6,6 +6,6 @@ vpc_access_connector:
 env_variables:
   CLOUD_SQL_USERNAME: <username>
   CLOUD_SQL_PASSWORD: <password>
-  CLOUD_SQL_DATABASE_NAME: <dbname>
-  CLOUD_SQL_CONNECTION_NAME: <conenction_name>
+  CLOUD_SQL_DATABASE_NAME: <db_name>
+  CLOUD_SQL_CONNECTION_NAME: <connection_string>
 instance_class: F4
