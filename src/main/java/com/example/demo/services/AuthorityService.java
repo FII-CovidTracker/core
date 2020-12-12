@@ -36,9 +36,11 @@ public class AuthorityService {
     }
 
     public AuthorityDto findById(Long id) {
-        Authority authority = authorityRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Authority", id));
-        return authorityToAuthorityDto(authority);
+        return authorityToAuthorityDto(findAuthorityById(id));
+    }
 
+    public Authority findAuthorityById(Long id) {
+        return authorityRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Authority", id));
     }
 
     public AuthorityDto findByEmail(String email) {

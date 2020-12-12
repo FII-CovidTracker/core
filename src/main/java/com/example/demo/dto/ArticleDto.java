@@ -13,5 +13,6 @@ public class ArticleDto {
     private String author;
     private String title;
     private String markdownContent;
-    private LocalDate publishDate;
+    private String publishDate;
+    private long authority_id;
 }
