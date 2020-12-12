@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "ctk_status_type")
 public class StatusType {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="id")
     private Long id;
 

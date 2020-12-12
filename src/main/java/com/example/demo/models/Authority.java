@@ -14,7 +14,7 @@ import java.util.Set;
 public class Authority {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
@@ -31,7 +31,7 @@ public class Authority {
     private String email;
 
     @Column(name = "hashedPassword")
-    private String hashedPassword;
+    private String password;
 
     @Column(name = "phone_number")
     private String phoneNumber;

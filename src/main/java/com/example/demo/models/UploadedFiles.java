@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "ctk_uploaded_files")
 public class UploadedFiles {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="id")
     private Long id;
 

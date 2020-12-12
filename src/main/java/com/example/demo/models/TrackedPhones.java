@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "ctk_tracked_phones")
 public class TrackedPhones {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 

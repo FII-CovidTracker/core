@@ -24,20 +24,34 @@ public class RegionService {
                 .build();
     }
 
+    public Region regionDtoToRegion(RegionDto regionDto) {
+        Region region = new Region();
+        region.setName(regionDto.getName());
+        region.setGlobal(regionDto.isGlobal());
+        return region;
+    }
+
     public List<RegionDto> findAll() {
         return regionRepository.findAll().stream()
                 .map(region -> regionToRegionDto(region))
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    public void saveRegion(RegionDto regionDto) {
+        Region region = regionDtoToRegion(regionDto);
+        regionRepository.save(region);
+    }
+    
     public void deleteById(Long id) {
         Region region = regionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Region", id));
         regionRepository.delete(region);
     }
 
     public RegionDto findById(Long id) {
-        Region region = regionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Region", id));
-        return regionToRegionDto(region);
+        return regionToRegionDto(findRegionById(id));
+    }
 
+    public Region findRegionById(Long id) {
+        return regionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Region", id));
     }
 }

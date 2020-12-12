@@ -9,9 +9,6 @@ import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +17,9 @@ import java.util.stream.Collectors;
 public class AuthorityService {
     @Autowired
     private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private RegionService regionService;
 
     public List<AuthorityDto> findAll() {
         return authorityRepository.findAll().stream()
@@ -45,20 +45,38 @@ public class AuthorityService {
         return authorityToAuthorityDto(authority);
     }
 
+    public void saveAuthority(AuthorityDto authorityDto) {
+        Authority authority = authorityDtoToAuthority(authorityDto);
+        authorityRepository.save(authority);
+    }
+
     public AuthorityDto authorityToAuthorityDto(Authority authority) {
         return AuthorityDto.builder()
                 .address(authority.getAddress())
                 .canVerifyCases(authority.getCanVerifyCases())
                 .email(authority.getEmail())
-                .hashedPassword(authority.getHashedPassword())
+                .password(authority.getPassword())
                 .name(authority.getName())
                 .phoneNumber(authority.getPhoneNumber())
                 .photoURL(authority.getUploadedFiles().stream()
                         .map(uploadedFiles -> uploadedFiles.getUrl())
                         .collect(Collectors.toList()))
-                .region(authority.getRegion().getName())
-
+                .region_id(authority.getRegion().getId())
                 .build();
+    }
+
+    public Authority authorityDtoToAuthority(AuthorityDto authorityDto) {
+        Authority authority = new Authority();
+        authority.setAddress(authorityDto.getAddress());
+        authority.setCanVerifyCases(authorityDto.getCanVerifyCases());
+        authority.setEmail(authorityDto.getEmail());
+        authority.setPassword(Hashing.sha256()
+                .hashString(authorityDto.getPassword(), StandardCharsets.UTF_8)
+                .toString());
+        authority.setName(authorityDto.getName());
+        authority.setPhoneNumber(authorityDto.getPhoneNumber());
+        authority.setRegion(regionService.findRegionById(authorityDto.getRegion_id()));
+        return authority;
     }
 
     public AuthorityDto loginAuthority() {
@@ -71,7 +89,7 @@ public class AuthorityService {
                 .hashString(testPassword, StandardCharsets.UTF_8)
                 .toString();
         AuthorityDto attemptLoginAuthority = findByEmail(testEmail);
-        if (attemptLoginAuthority == null || !attemptLoginAuthority.getHashedPassword().equals(hashedPass)) {
+        if (attemptLoginAuthority == null || !attemptLoginAuthority.getPassword().equals(hashedPass)) {
             System.out.println("Email does not exist or password is not correct!");
             return null;
         }
