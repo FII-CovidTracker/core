@@ -43,15 +43,15 @@ public class ControllerAspect {
         }
     }
 
-    @Pointcut("execution(* com.example.demo.controllers.*.*(..))")
-    public void loggingJoinPoint(){
-
-    }
-    @Around("loggingJoinPoint()")
-    public void adivceOnloggingJoinPoint(ProceedingJoinPoint pjp) throws Throwable {
-        System.out.println(pjp.getSignature().getDeclaringTypeName());
-        pjp.proceed();
-    }
+//    @Pointcut("execution(* com.example.demo.controllers.*.*(..))")
+//    public void loggingJoinPoint(){
+//
+//    }
+//    @Around("loggingJoinPoint()")
+//    public void adivceOnloggingJoinPoint(ProceedingJoinPoint pjp) throws Throwable {
+//        System.out.println(pjp.getSignature().getDeclaringTypeName());
+//        pjp.proceed();
+//    }
 
 
 }

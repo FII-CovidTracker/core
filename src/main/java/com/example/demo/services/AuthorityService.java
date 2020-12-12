@@ -1,17 +1,17 @@
 package com.example.demo.services;
 
 import com.example.demo.Exceptions.EntityNotFoundException;
+import com.example.demo.Exceptions.InvalidLoginException;
 import com.example.demo.auth.TokenAuthorization;
 import com.example.demo.dto.AuthorityDto;
+import com.example.demo.dto.LoginCredidentials;
+import com.example.demo.dto.LoginResult;
 import com.example.demo.models.Authority;
 import com.example.demo.repositories.AuthorityRepository;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,7 +61,7 @@ public class AuthorityService {
                 .build();
     }
 
-    public AuthorityDto loginAuthority() {
+    public LoginResult loginAuthority(LoginCredidentials loginCredidentials) {
         String accessToken = TokenAuthorization.getAccessToken();
         System.out.println(accessToken);
         System.out.println(TokenAuthorization.isRequestAuthorized(accessToken));
@@ -71,11 +71,20 @@ public class AuthorityService {
                 .hashString(testPassword, StandardCharsets.UTF_8)
                 .toString();
         AuthorityDto attemptLoginAuthority = findByEmail(testEmail);
-        if (attemptLoginAuthority == null || !attemptLoginAuthority.getHashedPassword().equals(hashedPass)) {
+        attemptLoginAuthority = new AuthorityDto().builder()
+                .email(testEmail)
+                .hashedPassword(hashedPass)
+                .build();
+        if (attemptLoginAuthority == null || !attemptLoginAuthority.getHashedPassword().equals(hashedPass) || !attemptLoginAuthority.getEmail().equals(testEmail)) {
             System.out.println("Email does not exist or password is not correct!");
-            return null;
+            throw new InvalidLoginException();
         }
         System.out.println("Login Successful");
-        return attemptLoginAuthority;
+        return LoginResult.builder()
+                .accessToken(accessToken)
+                .email(attemptLoginAuthority.getEmail())
+                .name(attemptLoginAuthority.getName())
+                .phoneNumber(attemptLoginAuthority.getPhoneNumber())
+                .build();
     }
 }

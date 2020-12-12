@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class AuthorityDto {
     private List<String> photoURL = new LinkedList<>();
     private String name;
