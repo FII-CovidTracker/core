@@ -1,16 +1,14 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.AuthorityDto;
+import com.example.demo.dto.LoginCredidentials;
+import com.example.demo.dto.LoginResult;
 import com.example.demo.services.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 
@@ -46,9 +44,10 @@ public class AuthorityController {
         return authorityService.findById(id);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public AuthorityDto login() {
-        return authorityService.loginAuthority();
+    public LoginResult login(@Valid @RequestBody LoginCredidentials loginCredidentials) {
+        return authorityService.loginAuthority(loginCredidentials);
+
     }
 }

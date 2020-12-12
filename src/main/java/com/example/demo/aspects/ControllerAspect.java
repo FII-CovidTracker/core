@@ -42,6 +42,7 @@ public class ControllerAspect {
             return pjp.proceed();
         }
     }
+}
 
 //    @Pointcut("execution(* com.example.demo.controllers.*.*(..))")
 //    public void loggingJoinPoint(){
@@ -52,4 +53,4 @@ public class ControllerAspect {
 //        System.out.println(pjp.getSignature().getDeclaringTypeName());
 //        pjp.proceed();
 //    }
-}
+
