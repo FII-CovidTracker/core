@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Table(name="ctk_recorded_cases")
 public class RecordedCases {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 

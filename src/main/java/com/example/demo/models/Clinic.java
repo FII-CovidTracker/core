@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "ctk_clinic")
 public class Clinic {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 

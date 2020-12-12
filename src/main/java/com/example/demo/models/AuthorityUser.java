@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name="ctk_authority_user")
 public class AuthorityUser {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name="ctk_appointment")
 public class Appointment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
