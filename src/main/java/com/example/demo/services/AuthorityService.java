@@ -57,6 +57,7 @@ public class AuthorityService {
 
     public AuthorityDto authorityToAuthorityDto(Authority authority) {
         return AuthorityDto.builder()
+                .id(authority.getId())
                 .address(authority.getAddress())
                 .canVerifyCases(authority.getCanVerifyCases())
                 .email(authority.getEmail())

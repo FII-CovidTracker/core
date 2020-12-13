@@ -59,6 +59,7 @@ public class ArticleService {
 
     public ArticleDto articleToArticleDto(Article article) {
         return ArticleDto.builder()
+                .id(article.getId())
                 .author(article.getAuthorName())
                 .publishDate(article.getPublishDate().toString())
                 .markdownContent(article.getMarkdownContent())

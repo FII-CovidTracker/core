@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class AuthorityDto {
+    private long id;
     private List<String> photoURL = new LinkedList<>();
     private String name;
     private Boolean canVerifyCases;

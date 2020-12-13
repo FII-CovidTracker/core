@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class ClinicDto {
+    private long id;
     private String name;
     private String address;
     private String email;

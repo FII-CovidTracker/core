@@ -41,6 +41,7 @@ public class ClinicService {
     
     public ClinicDto clinicToClinicDto(Clinic clinic) {
         return ClinicDto.builder()
+                .id(clinic.getId())
                 .name(clinic.getName())
                 .address(clinic.getAddress())
                 .email(clinic.getEmail())
