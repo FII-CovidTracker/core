@@ -24,6 +24,10 @@ public class AuthorityService {
     @Autowired
     private RegionService regionService;
 
+    public AuthorityService(AuthorityRepository authorityRepository) {
+        this.authorityRepository = authorityRepository;
+    }
+
     public List<AuthorityDto> findAll() {
         return authorityRepository.findAll().stream()
                 .map(authority -> authorityToAuthorityDto(authority))
@@ -90,19 +94,28 @@ public class AuthorityService {
         String accessToken = TokenAuthorization.getAccessToken();
         System.out.println(accessToken);
         System.out.println(TokenAuthorization.isRequestAuthorized(accessToken));
-        String testEmail = "test@test.com";
-        String testPassword = "test";
-        String hashedPass = Hashing.sha256()
-                .hashString(testPassword, StandardCharsets.UTF_8)
-                .toString();
-        AuthorityDto attemptLoginAuthority = findByEmail(testEmail);
 
+        String expectedEmail = "test@test.com";
+        String expectedPassword = "test";
+
+        //after database population is finished we'll have to hash the received password
+        String hashedPass = Hashing.sha256()
+                .hashString(expectedPassword, StandardCharsets.UTF_8)
+                .toString();
+
+        AuthorityDto attemptLoginAuthority = findByEmail(expectedEmail);
+
+
+        //comment the line below when the database is populated
         attemptLoginAuthority = new AuthorityDto().builder()
-                .email(testEmail)
-                .password(hashedPass)
+                .email(expectedEmail)
+                .password(expectedPassword)
                 .build();
 
-        if (attemptLoginAuthority == null || !attemptLoginAuthority.getPassword().equals(hashedPass) || !attemptLoginAuthority.getEmail().equals(testEmail)) {
+
+        if (attemptLoginAuthority == null ||
+                !attemptLoginAuthority.getPassword().equals(loginCredidentials.getPassword()) ||
+                !attemptLoginAuthority.getEmail().equals(loginCredidentials.getEmail())) {
             throw new InvalidLoginException();
         }
 
