@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RegionDto {
+    private long id;
     private String name;
     private boolean isGlobal;
 }

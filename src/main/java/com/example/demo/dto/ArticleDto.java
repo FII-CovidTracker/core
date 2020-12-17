@@ -10,8 +10,10 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class ArticleDto {
+    private long id;
     private String author;
     private String title;
     private String markdownContent;
-    private LocalDate publishDate;
+    private String publishDate;
+    private long authority_id;
 }

@@ -41,7 +41,7 @@ public class ArticleControllerIt {
 
     @Test
     public void saveOneShouldSaveOne() {
-        ArticleDto givenArticleDto = getArticleDto("author", "title", "markdown", LocalDate.of(2020, Month.NOVEMBER, 10));
+        ArticleDto givenArticleDto = getArticleDto("author", "title", "markdown", "10/11/2020");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -50,7 +50,7 @@ public class ArticleControllerIt {
 
     }
 
-    private ArticleDto getArticleDto(String author, String title, String markdown, LocalDate date) {
+    private ArticleDto getArticleDto(String author, String title, String markdown, String date) {
         return ArticleDto.builder()
                 .author(author)
                 .title(title)

@@ -19,6 +19,7 @@ public class RegionService {
 
     public RegionDto regionToRegionDto(Region region) {
         return RegionDto.builder()
+                .id(region.getId())
                 .isGlobal(region.isGlobal())
                 .name(region.getName())
                 .build();

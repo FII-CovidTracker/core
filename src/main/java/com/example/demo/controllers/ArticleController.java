@@ -41,4 +41,9 @@ public class ArticleController {
        return articleService.findById(id);
     }
 
+    @GetMapping("/getByRegion")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ArticleDto> getByRegion(@RequestParam("region") String regionName) {
+        return articleService.findByRegion(regionName);
+    }
 }
