@@ -2,6 +2,7 @@ package com.example.demo.helpers;
 
 import com.example.demo.models.Article;
 import com.example.demo.models.Authority;
+import com.example.demo.models.Region;
 import com.example.demo.repositories.ArticleRepository;
 import com.example.demo.repositories.AuthorityRepository;
 import lombok.AccessLevel;
@@ -16,20 +17,21 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AuthorityMocker {
 
-    private static Authority getMockedAuthority() {
+    private static Authority getMockedAuthority(Region testRegion) {
         Authority newAuthority = new Authority();
         newAuthority.setAddress("test");
         newAuthority.setCanVerifyCases(false);
-        newAuthority.setEmail("test@test.com");
-        newAuthority.setPassword("test");
+        newAuthority.setEmail("test1@test1.com");
+        newAuthority.setPassword("test1");
         newAuthority.setName("test");
+        newAuthority.setRegion(testRegion);
         return newAuthority;
     }
 
-    public static void addMockedAuthorities(AuthorityRepository repository) {
+    public static void addMockedAuthorities(AuthorityRepository repository, Region testRegion) {
         List<Authority> authorities = new LinkedList<>();
         for (int i = 0; i < 10; i++) {
-            authorities.add(getMockedAuthority());
+            authorities.add(getMockedAuthority(testRegion));
         }
         repository.saveAll(authorities);
     }

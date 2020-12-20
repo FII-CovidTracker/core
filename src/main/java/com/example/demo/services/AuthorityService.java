@@ -72,7 +72,7 @@ public class AuthorityService {
                 .photoURL(authority.getUploadedFiles().stream()
                         .map(uploadedFiles -> uploadedFiles.getUrl())
                         .collect(Collectors.toList()))
-                .region_id(authority.getRegion().getId())
+                .region_id(authority.getRegion() == null ? 0 : authority.getRegion().getId())
                 .build();
     }
 

@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +23,7 @@ class RegionControllerIt {
 
     private static RestTemplate restTemplate;
     private static final String BIG_ID = "500";
-    private static final String SMALL_ID = "9";
+    private static final String SMALL_ID = "251";
 
     @Autowired
     RegionRepository regionRepository;
@@ -38,6 +39,7 @@ class RegionControllerIt {
     @Test
     void getAllRegionsTest_shouldReturnAll() {
         List<RegionDto> regionDtos = restTemplate.getForObject("/region", List.class);
+        System.out.println(Arrays.toString(regionDtos.toArray()));
         assertThat(regionDtos).isNotEmpty();
     }
 
@@ -61,7 +63,7 @@ class RegionControllerIt {
     }
 
     @Test
-    void deleteRegionById_shouldThrowNoContent_WhenIdIs9() {
+    void deleteRegionById_shouldThrowNoContent_WhenIdIs251() {
         HttpEntity<Void> request = new HttpEntity<>(null);
         ResponseEntity<Void> response = restTemplate.exchange(String.format("/region/%s", SMALL_ID), HttpMethod.DELETE, request, Void.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -69,9 +71,9 @@ class RegionControllerIt {
 
 
     @Test
-    void findById_shouldThrowOK_WhenIdIs1() {
+    void findById_shouldThrowOK_WhenIdIs129() {
         HttpEntity<Void> request = new HttpEntity<>(null);
-        ResponseEntity<RegionDto> response = restTemplate.exchange("/region/1", HttpMethod.GET, request, RegionDto.class);
+        ResponseEntity<RegionDto> response = restTemplate.exchange("/region/129", HttpMethod.GET, request, RegionDto.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
