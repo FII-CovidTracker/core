@@ -6,6 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RegionDto {
     private long id;

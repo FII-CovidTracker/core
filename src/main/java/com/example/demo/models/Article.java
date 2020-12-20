@@ -25,7 +25,7 @@ public class Article {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "markdown_content")
+    @Column(name = "markdown_content", length = 5000)
     private String markdownContent;
 
     @Column(name = "publish_date")
