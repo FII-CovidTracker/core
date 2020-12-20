@@ -22,6 +22,12 @@ public class ArticleService {
     @Autowired
     private AuthorityService authorityService;
 
+
+    public ArticleService(ArticleRepository articleRepository, AuthorityService authorityService) {
+        this.articleRepository = articleRepository;
+        this.authorityService = authorityService;
+    }
+
     public List<ArticleDto> findAll() {
         return articleRepository.findAll().stream()
                 .map(article -> articleToArticleDto(article))

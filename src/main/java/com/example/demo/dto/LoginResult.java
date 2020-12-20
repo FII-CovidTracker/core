@@ -8,20 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class LoginResult {
-    private String success;
     private String accessToken;
-    private String email;
-    private String region;
-    private String phoneNumber;
+    private Long regionId;
     private String name;
-
-    public String getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(String success) {
-        this.success = success;
-    }
+    private Long id;
 
     public String getAccessToken() {
         return accessToken;
@@ -31,10 +21,6 @@ public class LoginResult {
         this.accessToken = accessToken;
     }
 
-    public LoginResult withSuccess(String success){
-        this.success = success;
-        return this;
-    }
 
     public LoginResult withAccess(String access){
         this.accessToken = access;

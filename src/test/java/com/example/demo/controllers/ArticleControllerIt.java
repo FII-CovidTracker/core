@@ -27,7 +27,7 @@ public class ArticleControllerIt {
     @BeforeEach
     public void init() {
         restTemplate = new RestTemplate();
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8080"));
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8085"));
 
 
         ArticleMocker.addMockedArticles(articleRepository);

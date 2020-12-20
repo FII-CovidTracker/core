@@ -19,14 +19,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ClinicControllerIt {
+
     private static RestTemplate restTemplate;
+    private static final String BIG_ID = "500";
+    private static final String SMALL_ID = "9";
+
     @Autowired
     ClinicRepository clinicRepository;
 
     @BeforeEach
     void init() {
         restTemplate = new RestTemplate();
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8080"));
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8085"));
 
         ClinicMocker.addMockedClinics(clinicRepository);
     }
@@ -34,7 +38,7 @@ class ClinicControllerIt {
     @Test
     void getAllClinicsTest_shouldReturnAll() {
         List<ClinicDto> clinicDtos = restTemplate.getForObject("/clinic", List.class);
-        assertThat(clinicDtos).isEmpty();
+        assertThat(clinicDtos).isNotEmpty();
     }
 
     @Test
@@ -49,19 +53,37 @@ class ClinicControllerIt {
     }
 
     @Test
-    void deleteClinicById_shouldThrowEntityNotFound_WhenIdIs500(){
+    void deleteClinicById_shouldThrowEntityNotFound_WhenIdIs500() {
         HttpEntity<Void> request = new HttpEntity<>(null);
         HttpClientErrorException exception = Assertions.catchThrowableOfType(() ->
-                restTemplate.exchange("/clinic/500", HttpMethod.DELETE, request, Void.class), HttpClientErrorException.class);
+                restTemplate.exchange(String.format("/clinic/%s", BIG_ID), HttpMethod.DELETE, request, Void.class), HttpClientErrorException.class);
         Assertions.assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     void deleteClinicById_shouldThrowNoContent_WhenIdIs9() {
         HttpEntity<Void> request = new HttpEntity<>(null);
-        ResponseEntity<Void> response = restTemplate.exchange("/clinic/9", HttpMethod.DELETE, request, Void.class);
+        ResponseEntity<Void> response = restTemplate.exchange(String.format("/clinic/%s", SMALL_ID), HttpMethod.DELETE, request, Void.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
+
+
+    @Test
+    void findById_shouldThrowOK_WhenIdIs1() {
+        HttpEntity<Void> request = new HttpEntity<>(null);
+        ResponseEntity<ClinicDto> response = restTemplate.exchange("/clinic/1", HttpMethod.GET, request, ClinicDto.class);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void findById_shouldThrowNotFound_WhenIdIs500() {
+        HttpEntity<Void> request = new HttpEntity<>(null);
+        HttpClientErrorException exception = Assertions.catchThrowableOfType(() ->
+                restTemplate.exchange(String.format("/clinic/%s", BIG_ID), HttpMethod.GET, request, Void.class), HttpClientErrorException.class);
+        Assertions.assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+
     private ClinicDto getClinicDto(String name, String address, String email, String phoneNumber, String cui) {
         return ClinicDto.builder()
                 .name(name)

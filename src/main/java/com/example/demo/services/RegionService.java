@@ -17,6 +17,10 @@ public class RegionService {
     @Autowired
     private RegionRepository regionRepository;
 
+    public RegionService(RegionRepository regionRepository) {
+        this.regionRepository = regionRepository;
+    }
+
     public RegionDto regionToRegionDto(Region region) {
         return RegionDto.builder()
                 .id(region.getId())
@@ -40,6 +44,7 @@ public class RegionService {
 
     public void saveRegion(RegionDto regionDto) {
         Region region = regionDtoToRegion(regionDto);
+        System.out.println(region.getName());
         regionRepository.save(region);
     }
     

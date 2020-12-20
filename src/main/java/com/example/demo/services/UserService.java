@@ -16,6 +16,10 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public List<UserDto> findAll() {
         return userRepository.findAll().stream()
                 .map(user -> userToUserDto(user))

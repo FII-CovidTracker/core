@@ -1,79 +1,133 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.ClinicDto;
+import com.example.demo.dto.ClinicDto;
 import com.example.demo.models.Clinic;
+import com.example.demo.models.Authority;
+import com.example.demo.models.Clinic;
+import com.example.demo.models.Region;
+import com.example.demo.repositories.ClinicRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
+
 public class ClinicServiceTest {
+    private static final String ADDRESS = "Strada stada cea strada, numarul numar, apartamentul appartament";
+    private static final String PHONE = "07777777777";
+    private static final String CUI = "12345678990";
+    private static final String EMAIL = "email@adresa.com";
+
+    private ClinicRepository clinicRepository;
 
     @Autowired
     private ClinicService clinicService;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public ClinicServiceTest() {
+
+        clinicRepository = Mockito.mock(ClinicRepository.class, this::getError);
+        clinicService = new ClinicService(clinicRepository);
     }
 
     @Test
-    public void clinicDtoToClinicTest() {
-        String givenName = "name";
-        String givenAddress = "address";
-        String givenEmail = "email";
-        String givenPhoneNumber = "phoneNumber";
-        String givenCUI = "CUI";
-        ClinicDto givenClinicDto = getClinicDto(givenName, givenAddress, givenEmail, givenPhoneNumber, givenCUI);
-        Clinic expectedClinic = getClinic(givenName, givenAddress, givenEmail, givenPhoneNumber, givenCUI);
+    public void findAllShouldReturnOneElement() {
+        Clinic expectedClinic = getClinic();
 
-        Clinic actualClinic = clinicService.clinicDtoToClinic(givenClinicDto);
-        assertThat(expectedClinic).isEqualToComparingOnlyGivenFields(actualClinic,
-                "name", "address", "email", "phoneNumber", "cui");
+        expectedClinic.setId(1L);
 
+        doAnswer(iom -> Arrays.asList(expectedClinic, expectedClinic))
+                .when(clinicRepository)
+                .findAll();
+
+        assertThat(clinicService.findAll().size()).isEqualTo(2);
     }
 
     @Test
-    public void clinicToClinicDtoTest() {
-        String givenName = "name";
-        String givenAddress = "address";
-        String givenEmail = "email";
-        String givenPhoneNumber = "phoneNumber";
-        String givenCUI = "CUI";
-        ClinicDto expectedClinicDto = getClinicDto(givenName, givenAddress, givenEmail, givenPhoneNumber, givenCUI);
-        Clinic givenClinic = getClinic(givenName, givenAddress, givenEmail, givenPhoneNumber, givenCUI);
+    public void saveTestShouldCallSaveFromRepository() {
+        ClinicDto givenClinicDto = getClinicDto();
 
-        ClinicDto actualClinicDto = clinicService.clinicToClinicDto(givenClinic);
-        assertThat(expectedClinicDto).isEqualToComparingOnlyGivenFields(actualClinicDto,
-                "name", "address", "email", "phoneNumber", "cui");
+        doAnswer(iom -> new Clinic())
+                .when(clinicRepository)
+                .save(any());
 
+        clinicService.saveClinic(givenClinicDto);
+
+        verify(clinicRepository, atLeastOnce()).save(any());
     }
 
-    private Clinic getClinic(String name, String address, String email, String phoneNumber, String cui) {
+    @Test
+    public void deleteTestShouldCallDeleteFromRepository() {
+        Clinic clinic = getClinic();
+
+        doAnswer(iom -> Optional.of(clinic))
+                .when(clinicRepository)
+                .findById(any());
+
+        doAnswer(iom -> null)
+                .when(clinicRepository)
+                .delete(any());
+
+        clinicService.deleteById(clinic.getId());
+
+        verify(clinicRepository, atLeastOnce()).delete(any());
+    }
+
+    @Test
+    public void findByIdTestShouldCallFindByIdFromRepository() {
+        Clinic clinic = getClinic();
+
+        doAnswer(iom -> Optional.of(clinic))
+                .when(clinicRepository)
+                .findById(any());
+
+        clinicService.findById(clinic.getId());
+
+        verify(clinicRepository, atLeastOnce()).findById(any());
+    }
+
+    private Clinic getClinic() {
         Clinic clinic = new Clinic();
-        clinic.setName(name);
-        clinic.setAddress(address);
-        clinic.setEmail(email);
-        clinic.setPhoneNumber(phoneNumber);
-        clinic.setCui(cui);
+        clinic.setId(1L);
+        clinic.setAddress(ADDRESS);
+        clinic.setCui(PHONE);
+        clinic.setEmail(EMAIL);
+        clinic.setPhoneNumber(CUI);
+        clinic.setAppointments(new LinkedHashSet<>());
+        clinic.setRegion(new Region());
+        clinic.setClinicUsers(new LinkedHashSet<>());
+        clinic.setUploadedFiles(new LinkedHashSet<>());
         return clinic;
     }
 
-    private ClinicDto getClinicDto(String name, String address, String email, String phoneNumber, String cui) {
+    private ClinicDto getClinicDto() {
         return ClinicDto.builder()
-                .name(name)
-                .address(address)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .cui(cui)
+                .phoneNumber(PHONE)
+                .address(ADDRESS)
+                .email(EMAIL)
+                .cui(CUI)
                 .build();
+    }
+
+    private Object getError(InvocationOnMock invocationOnMock) {
+        throw new RuntimeException(String.format("Should not reach %s::%s", invocationOnMock.getMock().getClass().getName(),
+                invocationOnMock.getMethod().getName()));
     }
 }
 

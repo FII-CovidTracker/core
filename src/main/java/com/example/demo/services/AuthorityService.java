@@ -24,6 +24,11 @@ public class AuthorityService {
     @Autowired
     private RegionService regionService;
 
+    public AuthorityService(AuthorityRepository authorityRepository, RegionService regionService) {
+        this.authorityRepository = authorityRepository;
+        this.regionService = regionService;
+    }
+
     public List<AuthorityDto> findAll() {
         return authorityRepository.findAll().stream()
                 .map(authority -> authorityToAuthorityDto(authority))
@@ -90,28 +95,38 @@ public class AuthorityService {
         String accessToken = TokenAuthorization.getAccessToken();
         System.out.println(accessToken);
         System.out.println(TokenAuthorization.isRequestAuthorized(accessToken));
-        String testEmail = "test@test.com";
-        String testPassword = "test";
-        String hashedPass = Hashing.sha256()
-                .hashString(testPassword, StandardCharsets.UTF_8)
+
+//        String expectedEmail = "test@test.com";
+//        String expectedPassword = "test";
+
+        //after database population is finished we'll have to hash the received password
+        String receivedPassword = Hashing.sha256()
+                .hashString(loginCredidentials.getPassword(), StandardCharsets.UTF_8)
                 .toString();
-        AuthorityDto attemptLoginAuthority = findByEmail(testEmail);
 
-        attemptLoginAuthority = new AuthorityDto().builder()
-                .email(testEmail)
-                .password(hashedPass)
-                .build();
+        AuthorityDto attemptLoginAuthority = findByEmail(loginCredidentials.getEmail());
 
-        if (attemptLoginAuthority == null || !attemptLoginAuthority.getPassword().equals(hashedPass) || !attemptLoginAuthority.getEmail().equals(testEmail)) {
+
+        //comment the line below when the database is populated
+//        attemptLoginAuthority = new AuthorityDto().builder()
+//                .id(3)
+//                .email(expectedEmail)
+//                .password(expectedPassword)
+//                .build();
+
+
+        if (attemptLoginAuthority == null ||
+                !attemptLoginAuthority.getPassword().equals(receivedPassword) ||
+                !attemptLoginAuthority.getEmail().equals(loginCredidentials.getEmail())) {
             throw new InvalidLoginException();
         }
 
         System.out.println("Login Successful");
         return LoginResult.builder()
                 .accessToken(accessToken)
-                .email(attemptLoginAuthority.getEmail())
                 .name(attemptLoginAuthority.getName())
-                .phoneNumber(attemptLoginAuthority.getPhoneNumber())
+                .id(attemptLoginAuthority.getId())
+                .regionId(attemptLoginAuthority.getRegion_id())
                 .build();
     }
 }
