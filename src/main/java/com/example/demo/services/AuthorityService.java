@@ -96,26 +96,27 @@ public class AuthorityService {
         System.out.println(accessToken);
         System.out.println(TokenAuthorization.isRequestAuthorized(accessToken));
 
-        String expectedEmail = "test@test.com";
-        String expectedPassword = "test";
+//        String expectedEmail = "test@test.com";
+//        String expectedPassword = "test";
 
         //after database population is finished we'll have to hash the received password
-        String hashedPass = Hashing.sha256()
-                .hashString(expectedPassword, StandardCharsets.UTF_8)
+        String receivedPassword = Hashing.sha256()
+                .hashString(loginCredidentials.getPassword(), StandardCharsets.UTF_8)
                 .toString();
 
-        AuthorityDto attemptLoginAuthority = findByEmail(expectedEmail);
+        AuthorityDto attemptLoginAuthority = findByEmail(loginCredidentials.getEmail());
 
 
         //comment the line below when the database is populated
-        attemptLoginAuthority = new AuthorityDto().builder()
-                .email(expectedEmail)
-                .password(expectedPassword)
-                .build();
+//        attemptLoginAuthority = new AuthorityDto().builder()
+//                .id(3)
+//                .email(expectedEmail)
+//                .password(expectedPassword)
+//                .build();
 
 
         if (attemptLoginAuthority == null ||
-                !attemptLoginAuthority.getPassword().equals(loginCredidentials.getPassword()) ||
+                !attemptLoginAuthority.getPassword().equals(receivedPassword) ||
                 !attemptLoginAuthority.getEmail().equals(loginCredidentials.getEmail())) {
             throw new InvalidLoginException();
         }
@@ -123,9 +124,9 @@ public class AuthorityService {
         System.out.println("Login Successful");
         return LoginResult.builder()
                 .accessToken(accessToken)
-                .email(attemptLoginAuthority.getEmail())
                 .name(attemptLoginAuthority.getName())
-                .phoneNumber(attemptLoginAuthority.getPhoneNumber())
+                .id(attemptLoginAuthority.getId())
+                .regionId(attemptLoginAuthority.getRegion_id())
                 .build();
     }
 }

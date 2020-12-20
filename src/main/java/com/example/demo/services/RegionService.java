@@ -44,6 +44,7 @@ public class RegionService {
 
     public void saveRegion(RegionDto regionDto) {
         Region region = regionDtoToRegion(regionDto);
+        System.out.println(region.getName());
         regionRepository.save(region);
     }
     
