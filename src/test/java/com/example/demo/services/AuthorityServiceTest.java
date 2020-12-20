@@ -7,11 +7,13 @@ import com.example.demo.dto.RegionDto;
 import com.example.demo.models.Authority;
 import com.example.demo.models.Region;
 import com.example.demo.repositories.AuthorityRepository;
+import com.google.common.hash.Hashing;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -142,7 +144,7 @@ public class AuthorityServiceTest {
     @Test
     public void loginAuthorityTestPassesOnCorrectCredentials() {
         Authority authority = getAuthority();
-
+        authority.setPassword(hashString(PASSWORD));
         doAnswer(iom -> authority)
                 .when(authorityRepository)
                 .findAuthorityByEmail(any());
@@ -202,7 +204,11 @@ public class AuthorityServiceTest {
         region.setClinicSet(new LinkedHashSet<>());
         return region;
     }
-
+    private String hashString(String string){
+       return Hashing.sha256()
+               .hashString(string, StandardCharsets.UTF_8)
+               .toString();
+    }
    private Object getError(InvocationOnMock invocationOnMock) {
        throw new RuntimeException(String.format("Should not reach %s::%s", invocationOnMock.getMock().getClass().getName(),
                invocationOnMock.getMethod().getName()));
