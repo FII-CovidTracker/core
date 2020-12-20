@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.dto.ArticleDto;
 import com.example.demo.models.Article;
 import com.example.demo.models.Authority;
+import com.example.demo.models.Clinic;
 import com.example.demo.repositories.ArticleRepository;
 import org.hibernate.mapping.Any;
 import org.junit.Test;
@@ -14,14 +15,18 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArticleServiceTest {
+    private static final String REGION_NAME = "IASI";
     private static final String AUTHOR_NAME = "AUTHOR";
     private static final String ARTICLE_TITLE = "TITLE";
+    private static final String GLOBAL_REGION_NAME = "global";
     private static final String MARKDOWN_CONTENT = "MARKDOWN";
     private static final LocalDate PUBLISH_DATE = LocalDate.of(2020, Month.NOVEMBER, 10);
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d/MM/yyyy");
@@ -39,6 +44,68 @@ public class ArticleServiceTest {
         articleService = new ArticleService(
                 articleRepository,
                 authorityService);
+    }
+
+
+    @Test
+    public void deleteTestShouldCallDeleteFromRepository() {
+        Article article = getArticle();
+
+        doAnswer(iom -> Optional.of(article))
+                .when(articleRepository)
+                .findById(any());
+
+        doAnswer(iom -> null)
+                .when(articleRepository)
+                .delete(any());
+
+        articleService.deleteById(article.getId());
+
+        verify(articleRepository, atLeastOnce()).delete(any());
+    }
+
+    @Test
+    public void findByIdTestShouldCallFindByIdFromRepository() {
+        Article article = getArticle();
+
+        doAnswer(iom -> Optional.of(article))
+                .when(articleRepository)
+                .findById(any());
+
+        articleService.findById(article.getId());
+
+        verify(articleRepository, atLeastOnce()).findById(any());
+    }
+
+    @Test
+    public void findByRegionTestShouldCallLocalArticlesRepository() {
+        Article article = getArticle();
+
+        doAnswer(iom -> List.of(article))
+                .when(articleRepository)
+                .localArticles(any());
+
+
+        articleService.findByRegion(REGION_NAME);
+
+        verify(articleRepository, atLeastOnce()).localArticles(any());
+    }
+
+    @Test
+    public void globalFindByRegionTestShouldCallFindAllRepository() {
+        Article article = getArticle();
+
+        doAnswer(iom -> List.of(article))
+                .when(articleRepository)
+                .localArticles(GLOBAL_REGION_NAME);
+
+        doAnswer(iom -> List.of(article))
+                .when(articleRepository)
+                .findAll();
+
+        articleService.findByRegion(GLOBAL_REGION_NAME);
+
+        verify(articleRepository, atLeastOnce()).findAll();
     }
 
     @Test
@@ -103,10 +170,12 @@ public class ArticleServiceTest {
 
     private Article getArticle() {
         Article article = new Article();
+        article.setId(1L);
         article.setAuthorName(AUTHOR_NAME);
         article.setTitle(ARTICLE_TITLE);
         article.setMarkdownContent(MARKDOWN_CONTENT);
         article.setPublishDate(PUBLISH_DATE);
+        article.setAuthority(getAuthority());
         return article;
     }
 
