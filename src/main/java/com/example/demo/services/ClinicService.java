@@ -16,6 +16,10 @@ public class ClinicService {
     @Autowired
     ClinicRepository clinicRepository;
 
+    public ClinicService(ClinicRepository clinicRepository) {
+        this.clinicRepository = clinicRepository;
+    }
+
     public List<ClinicDto> findAll() {
         return clinicRepository.findAll().stream()
                 .map(clinic -> clinicToClinicDto(clinic))

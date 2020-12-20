@@ -24,8 +24,9 @@ public class AuthorityService {
     @Autowired
     private RegionService regionService;
 
-    public AuthorityService(AuthorityRepository authorityRepository) {
+    public AuthorityService(AuthorityRepository authorityRepository, RegionService regionService) {
         this.authorityRepository = authorityRepository;
+        this.regionService = regionService;
     }
 
     public List<AuthorityDto> findAll() {
