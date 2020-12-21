@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dto.ClinicDto;
 import com.example.demo.dto.ClinicDto;
+import com.example.demo.helpers.ServiceTestValuesWrapper;
 import com.example.demo.models.Clinic;
 import com.example.demo.models.Authority;
 import com.example.demo.models.Clinic;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.security.Provider;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -30,10 +32,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 public class ClinicServiceTest {
-    private static final String ADDRESS = "Strada stada cea strada, numarul numar, apartamentul appartament";
-    private static final String PHONE = "07777777777";
-    private static final String CUI = "12345678990";
-    private static final String EMAIL = "email@adresa.com";
 
     private ClinicRepository clinicRepository;
 
@@ -105,10 +103,10 @@ public class ClinicServiceTest {
     private Clinic getClinic() {
         Clinic clinic = new Clinic();
         clinic.setId(1L);
-        clinic.setAddress(ADDRESS);
-        clinic.setCui(PHONE);
-        clinic.setEmail(EMAIL);
-        clinic.setPhoneNumber(CUI);
+        clinic.setAddress(ServiceTestValuesWrapper.ADDRESS);
+        clinic.setCui(ServiceTestValuesWrapper.PHONE);
+        clinic.setEmail(ServiceTestValuesWrapper.EMAIL);
+        clinic.setPhoneNumber(ServiceTestValuesWrapper.CUI);
         clinic.setAppointments(new LinkedHashSet<>());
         clinic.setRegion(new Region());
         clinic.setClinicUsers(new LinkedHashSet<>());
@@ -118,10 +116,10 @@ public class ClinicServiceTest {
 
     private ClinicDto getClinicDto() {
         return ClinicDto.builder()
-                .phoneNumber(PHONE)
-                .address(ADDRESS)
-                .email(EMAIL)
-                .cui(CUI)
+                .phoneNumber(ServiceTestValuesWrapper.PHONE)
+                .address(ServiceTestValuesWrapper.ADDRESS)
+                .email(ServiceTestValuesWrapper.EMAIL)
+                .cui(ServiceTestValuesWrapper.CUI)
                 .build();
     }
 

@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserDto;
+import com.example.demo.helpers.ServiceTestValuesWrapper;
 import com.example.demo.models.User;
 import com.example.demo.models.Region;
 import com.example.demo.models.User;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.security.Provider;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -26,9 +28,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
  public class UserServiceTest {
-    private static final String NAME = "Name";
-    private static final String PASSWORD = "12345678990";
-    private static final String EMAIL = "email@adresa.com";
 
     private UserRepository userRepository;
 
@@ -100,18 +99,18 @@ import static org.mockito.Mockito.*;
     private User getUser() {
         User user = new User();
         user.setId(1L);
-        user.setEmail(EMAIL);
-        user.setName(NAME);
-        user.setPassword(PASSWORD);
+        user.setEmail(ServiceTestValuesWrapper.EMAIL);
+        user.setName(ServiceTestValuesWrapper.AUTHORITY_NAME);
+        user.setPassword(ServiceTestValuesWrapper.PASSWORD);
         user.setUserType(new UserType());
         return user;
     }
 
     private UserDto getUserDto() {
         return UserDto.builder()
-                .email(EMAIL)
-                .password(PASSWORD)
-                .name(NAME)
+                .email(ServiceTestValuesWrapper.EMAIL)
+                .password(ServiceTestValuesWrapper.PASSWORD)
+                .name(ServiceTestValuesWrapper.AUTHORITY_NAME)
                 .id(1L)
                 .build();
     }

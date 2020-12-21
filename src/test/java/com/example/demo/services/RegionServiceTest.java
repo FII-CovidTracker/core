@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.RegionDto;
+import com.example.demo.helpers.ServiceTestValuesWrapper;
 import com.example.demo.models.Region;
 import com.example.demo.repositories.RegionRepository;
 import org.junit.Test;
@@ -17,7 +18,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class RegionServiceTest {
-   private static final String NAME = "Name";
 
    private RegionRepository regionRepository;
 
@@ -89,7 +89,7 @@ public class RegionServiceTest {
    private Region getRegion() {
        Region region = new Region();
        region.setId(1L);
-       region.setName(NAME);
+       region.setName(ServiceTestValuesWrapper.REGION_NAME);
        region.setGlobal(true);
        region.setAuthoritySet(new LinkedHashSet<>());
        region.setClinicSet(new LinkedHashSet<>());
@@ -99,7 +99,7 @@ public class RegionServiceTest {
    private RegionDto getRegionDto() {
        return RegionDto.builder()
                .isGlobal(true)
-               .name(NAME)
+               .name(ServiceTestValuesWrapper.REGION_NAME)
                .id(1L)
                .build();
    }

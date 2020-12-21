@@ -2,17 +2,16 @@ package com.example.demo.services;
 
 import com.example.demo.Exceptions.EntityNotFoundException;
 import com.example.demo.Exceptions.InvalidLoginException;
+import com.example.demo.auth.PasswordOperator;
 import com.example.demo.auth.TokenAuthorization;
 import com.example.demo.dto.AuthorityDto;
 import com.example.demo.dto.LoginCredidentials;
 import com.example.demo.dto.LoginResult;
 import com.example.demo.models.Authority;
 import com.example.demo.repositories.AuthorityRepository;
-import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,34 +60,19 @@ public class AuthorityService {
     }
 
     public AuthorityDto authorityToAuthorityDto(Authority authority) {
-        if (authority.getRegion() == null)
-            return AuthorityDto.builder()
-                    .id(authority.getId())
-                    .address(authority.getAddress())
-                    .canVerifyCases(authority.getCanVerifyCases())
-                    .email(authority.getEmail())
-                    .password(authority.getPassword())
-                    .name(authority.getName())
-                    .phoneNumber(authority.getPhoneNumber())
-                    .photoURL(authority.getUploadedFiles().stream()
-                            .map(uploadedFiles -> uploadedFiles.getUrl())
-                            .collect(Collectors.toList()))
-                    .region_id(0)
-                    .build();
-        else
-            return AuthorityDto.builder()
-                    .id(authority.getId())
-                    .address(authority.getAddress())
-                    .canVerifyCases(authority.getCanVerifyCases())
-                    .email(authority.getEmail())
-                    .password(authority.getPassword())
-                    .name(authority.getName())
-                    .phoneNumber(authority.getPhoneNumber())
-                    .photoURL(authority.getUploadedFiles().stream()
-                            .map(uploadedFiles -> uploadedFiles.getUrl())
-                            .collect(Collectors.toList()))
-                    .region_id(authority.getRegion().getId())
-                    .build();
+        return AuthorityDto.builder()
+                .id(authority.getId())
+                .address(authority.getAddress())
+                .canVerifyCases(authority.getCanVerifyCases())
+                .email(authority.getEmail())
+                .password(authority.getPassword())
+                .name(authority.getName())
+                .phoneNumber(authority.getPhoneNumber())
+                .photoURL(authority.getUploadedFiles().stream()
+                        .map(uploadedFiles -> uploadedFiles.getUrl())
+                        .collect(Collectors.toList()))
+                .region_id(authority.getRegion() == null ? 0 : authority.getRegion().getId())
+                .build();
     }
 
     public Authority authorityDtoToAuthority(AuthorityDto authorityDto) {
@@ -96,9 +80,7 @@ public class AuthorityService {
         authority.setAddress(authorityDto.getAddress());
         authority.setCanVerifyCases(authorityDto.getCanVerifyCases());
         authority.setEmail(authorityDto.getEmail());
-        authority.setPassword(Hashing.sha256()
-                .hashString(authorityDto.getPassword(), StandardCharsets.UTF_8)
-                .toString());
+        authority.setPassword(PasswordOperator.getHashForPassword(authorityDto.getPassword()));
         authority.setName(authorityDto.getName());
         authority.setPhoneNumber(authorityDto.getPhoneNumber());
         authority.setRegion(regionService.findRegionById(authorityDto.getRegion_id()));
@@ -110,25 +92,9 @@ public class AuthorityService {
         String accessToken = TokenAuthorization.getAccessToken();
         System.out.println(accessToken);
         System.out.println(TokenAuthorization.isRequestAuthorized(accessToken));
-
-//        String expectedEmail = "test@test.com";
-//        String expectedPassword = "test";
-
-        //after database population is finished we'll have to hash the received password
-        String receivedPassword = Hashing.sha256()
-                .hashString(loginCredidentials.getPassword(), StandardCharsets.UTF_8)
-                .toString();
+        String receivedPassword = PasswordOperator.getHashForPassword(loginCredidentials.getPassword());
 
         AuthorityDto attemptLoginAuthority = findByEmail(loginCredidentials.getEmail());
-
-
-        //comment the line below when the database is populated
-//        attemptLoginAuthority = new AuthorityDto().builder()
-//                .id(3)
-//                .email(expectedEmail)
-//                .password(expectedPassword)
-//                .build();
-
 
         if (attemptLoginAuthority == null ||
                 !attemptLoginAuthority.getPassword().equals(receivedPassword) ||

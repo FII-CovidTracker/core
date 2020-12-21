@@ -1,9 +1,11 @@
 package com.example.demo.services;
 
 import com.example.demo.Exceptions.InvalidLoginException;
+import com.example.demo.auth.PasswordOperator;
 import com.example.demo.dto.AuthorityDto;
 import com.example.demo.dto.LoginCredidentials;
 import com.example.demo.dto.RegionDto;
+import com.example.demo.helpers.ServiceTestValuesWrapper;
 import com.example.demo.models.Authority;
 import com.example.demo.models.Region;
 import com.example.demo.repositories.AuthorityRepository;
@@ -24,11 +26,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class AuthorityServiceTest {
-    private static final String NAME = "Name";
-    private static final String PASSWORD = "test";
-    private static final String ADDRESS = "Strada stada cea strada, numarul numar, apartamentul appartament";
-    private static final String PHONE = "07777777777";
-    private static final String EMAIL = "test@test.com";
 
    private AuthorityRepository authorityRepository;
    private RegionService regionService;
@@ -123,7 +120,7 @@ public class AuthorityServiceTest {
                 .when(authorityRepository)
                 .findAuthorityByEmail(any());
 
-        authorityService.findByEmail(EMAIL);
+        authorityService.findByEmail(ServiceTestValuesWrapper.EMAIL);
 
         verify(authorityRepository, atLeastOnce()).findAuthorityByEmail(any());
     }
@@ -144,12 +141,12 @@ public class AuthorityServiceTest {
     @Test
     public void loginAuthorityTestPassesOnCorrectCredentials() {
         Authority authority = getAuthority();
-        authority.setPassword(hashString(PASSWORD));
+        authority.setPassword(hashString(ServiceTestValuesWrapper.PASSWORD));
         doAnswer(iom -> authority)
                 .when(authorityRepository)
                 .findAuthorityByEmail(any());
 
-        authorityService.loginAuthority(new LoginCredidentials(EMAIL, PASSWORD));
+        authorityService.loginAuthority(new LoginCredidentials(ServiceTestValuesWrapper.EMAIL, ServiceTestValuesWrapper.PASSWORD));
 
         verify(authorityRepository, atLeastOnce()).findAuthorityByEmail(any());
     }
@@ -162,18 +159,18 @@ public class AuthorityServiceTest {
                 .when(authorityRepository)
                 .findAuthorityByEmail(any());
 
-        authorityService.loginAuthority(new LoginCredidentials(EMAIL, "wrong"));
+        authorityService.loginAuthority(new LoginCredidentials(ServiceTestValuesWrapper.EMAIL, "wrong"));
     }
 
    private Authority getAuthority() {
        Authority authority = new Authority();
        authority.setId(1L);
-       authority.setName(NAME);
-       authority.setAddress(ADDRESS);
+       authority.setName(ServiceTestValuesWrapper.AUTHORITY_NAME);
+       authority.setAddress(ServiceTestValuesWrapper.ADDRESS);
        authority.setCanVerifyCases(true);
-       authority.setEmail(EMAIL);
-       authority.setPassword(PASSWORD);
-       authority.setPhoneNumber(PHONE);
+       authority.setEmail(ServiceTestValuesWrapper.EMAIL);
+       authority.setPassword(ServiceTestValuesWrapper.PASSWORD);
+       authority.setPhoneNumber(ServiceTestValuesWrapper.PHONE);
        authority.setRegion(getRegion());
        authority.setArticleSet(new LinkedHashSet<>());
        authority.setAuthorityUsers(new LinkedHashSet<>());
@@ -183,14 +180,14 @@ public class AuthorityServiceTest {
 
    private AuthorityDto getAuthorityDto() {
        return AuthorityDto.builder()
-               .email(EMAIL)
-               .password(PASSWORD)
-               .address(ADDRESS)
+               .email(ServiceTestValuesWrapper.EMAIL)
+               .password(ServiceTestValuesWrapper.PASSWORD)
+               .address(ServiceTestValuesWrapper.ADDRESS)
                .region_id(1L)
                .photoURL(new ArrayList<>())
-               .phoneNumber(PHONE)
+               .phoneNumber(ServiceTestValuesWrapper.PHONE)
                .canVerifyCases(true)
-               .name(NAME)
+               .name(ServiceTestValuesWrapper.AUTHORITY_NAME)
                .id(1L)
                .build();
    }
@@ -198,16 +195,14 @@ public class AuthorityServiceTest {
     private Region getRegion() {
         Region region = new Region();
         region.setId(1L);
-        region.setName(NAME);
+        region.setName(ServiceTestValuesWrapper.AUTHORITY_NAME);
         region.setGlobal(true);
         region.setAuthoritySet(new LinkedHashSet<>());
         region.setClinicSet(new LinkedHashSet<>());
         return region;
     }
     private String hashString(String string){
-       return Hashing.sha256()
-               .hashString(string, StandardCharsets.UTF_8)
-               .toString();
+       return PasswordOperator.getHashForPassword(string);
     }
    private Object getError(InvocationOnMock invocationOnMock) {
        throw new RuntimeException(String.format("Should not reach %s::%s", invocationOnMock.getMock().getClass().getName(),

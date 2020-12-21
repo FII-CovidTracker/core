@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.ArticleDto;
+import com.example.demo.helpers.ServiceTestValuesWrapper;
 import com.example.demo.models.Article;
 import com.example.demo.models.Authority;
 import com.example.demo.models.Clinic;
@@ -23,14 +24,6 @@ import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArticleServiceTest {
-    private static final String REGION_NAME = "IASI";
-    private static final String AUTHOR_NAME = "AUTHOR";
-    private static final String ARTICLE_TITLE = "TITLE";
-    private static final String GLOBAL_REGION_NAME = "global";
-    private static final String MARKDOWN_CONTENT = "MARKDOWN";
-    private static final LocalDate PUBLISH_DATE = LocalDate.of(2020, Month.NOVEMBER, 10);
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d/MM/yyyy");
-
     private ArticleRepository articleRepository;
     private AuthorityService authorityService;
 
@@ -86,7 +79,7 @@ public class ArticleServiceTest {
                 .localArticles(any());
 
 
-        articleService.findByRegion(REGION_NAME);
+        articleService.findByRegion(ServiceTestValuesWrapper.REGION_NAME);
 
         verify(articleRepository, atLeastOnce()).localArticles(any());
     }
@@ -97,13 +90,13 @@ public class ArticleServiceTest {
 
         doAnswer(iom -> List.of(article))
                 .when(articleRepository)
-                .localArticles(GLOBAL_REGION_NAME);
+                .localArticles(ServiceTestValuesWrapper.GLOBAL_REGION_NAME);
 
         doAnswer(iom -> List.of(article))
                 .when(articleRepository)
                 .findAll();
 
-        articleService.findByRegion(GLOBAL_REGION_NAME);
+        articleService.findByRegion(ServiceTestValuesWrapper.GLOBAL_REGION_NAME);
 
         verify(articleRepository, atLeastOnce()).findAll();
     }
@@ -141,7 +134,7 @@ public class ArticleServiceTest {
     @Test
     public void articleToArticleDtoTestShouldReturnExpectedArticleDto() {
         ArticleDto expectedArticleDto = getArticleDto();
-        expectedArticleDto.setPublishDate(PUBLISH_DATE.toString());
+        expectedArticleDto.setPublishDate(ServiceTestValuesWrapper.PUBLISH_DATE.toString());
         Article givenArticle = getArticle();
         givenArticle.setId(1L);
         givenArticle.setAuthority(getAuthority());
@@ -171,20 +164,20 @@ public class ArticleServiceTest {
     private Article getArticle() {
         Article article = new Article();
         article.setId(1L);
-        article.setAuthorName(AUTHOR_NAME);
-        article.setTitle(ARTICLE_TITLE);
-        article.setMarkdownContent(MARKDOWN_CONTENT);
-        article.setPublishDate(PUBLISH_DATE);
+        article.setAuthorName(ServiceTestValuesWrapper.AUTHOR_NAME);
+        article.setTitle(ServiceTestValuesWrapper.ARTICLE_TITLE);
+        article.setMarkdownContent(ServiceTestValuesWrapper.MARKDOWN_CONTENT);
+        article.setPublishDate(ServiceTestValuesWrapper.PUBLISH_DATE);
         article.setAuthority(getAuthority());
         return article;
     }
 
     private ArticleDto getArticleDto() {
         return ArticleDto.builder()
-                .author(AUTHOR_NAME)
-                .title(ARTICLE_TITLE)
-                .markdownContent(MARKDOWN_CONTENT)
-                .publishDate(DATE_TIME_FORMATTER.format(PUBLISH_DATE))
+                .author(ServiceTestValuesWrapper.AUTHOR_NAME)
+                .title(ServiceTestValuesWrapper.ARTICLE_TITLE)
+                .markdownContent(ServiceTestValuesWrapper.MARKDOWN_CONTENT)
+                .publishDate(ServiceTestValuesWrapper.DATE_TIME_FORMATTER.format(ServiceTestValuesWrapper.PUBLISH_DATE))
                 .build();
     }
 
