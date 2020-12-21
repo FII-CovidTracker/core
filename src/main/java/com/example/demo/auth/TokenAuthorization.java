@@ -12,25 +12,6 @@ public class TokenAuthorization {
 
     }
 
-    private static String readResponse(HttpURLConnection connection) {
-        try {
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
-            }
-            rd.close();
-            return response.toString();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public static String getAccessToken() {
         HttpURLConnection connection;
         try {
@@ -46,8 +27,16 @@ public class TokenAuthorization {
             osw.flush();
             osw.close();
             os.close();
-            String response = readResponse(connection);
-            JSONObject accessTokenJson = new JSONObject(response);
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            JSONObject accessTokenJson = new JSONObject(response.toString());
             return accessTokenJson.getString("access_token");
         }
         catch(IOException e) {
@@ -65,8 +54,16 @@ public class TokenAuthorization {
             connection.setRequestProperty("Content-Type","application/json");
             connection.setRequestProperty("Authorization", "Bearer " + accessToken);
             connection.setDoOutput(true);
-            String response = readResponse(connection);
-            System.out.println(response);
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            System.out.println(response.toString());
             return connection.getResponseCode() == 200;
         }
         catch(IOException e) {

@@ -61,19 +61,34 @@ public class AuthorityService {
     }
 
     public AuthorityDto authorityToAuthorityDto(Authority authority) {
-        return AuthorityDto.builder()
-                .id(authority.getId())
-                .address(authority.getAddress())
-                .canVerifyCases(authority.getCanVerifyCases())
-                .email(authority.getEmail())
-                .password(authority.getPassword())
-                .name(authority.getName())
-                .phoneNumber(authority.getPhoneNumber())
-                .photoURL(authority.getUploadedFiles().stream()
-                        .map(uploadedFiles -> uploadedFiles.getUrl())
-                        .collect(Collectors.toList()))
-                .region_id(authority.getRegion() == null ? 0 : authority.getRegion().getId())
-                .build();
+        if (authority.getRegion() == null)
+            return AuthorityDto.builder()
+                    .id(authority.getId())
+                    .address(authority.getAddress())
+                    .canVerifyCases(authority.getCanVerifyCases())
+                    .email(authority.getEmail())
+                    .password(authority.getPassword())
+                    .name(authority.getName())
+                    .phoneNumber(authority.getPhoneNumber())
+                    .photoURL(authority.getUploadedFiles().stream()
+                            .map(uploadedFiles -> uploadedFiles.getUrl())
+                            .collect(Collectors.toList()))
+                    .region_id(0)
+                    .build();
+        else
+            return AuthorityDto.builder()
+                    .id(authority.getId())
+                    .address(authority.getAddress())
+                    .canVerifyCases(authority.getCanVerifyCases())
+                    .email(authority.getEmail())
+                    .password(authority.getPassword())
+                    .name(authority.getName())
+                    .phoneNumber(authority.getPhoneNumber())
+                    .photoURL(authority.getUploadedFiles().stream()
+                            .map(uploadedFiles -> uploadedFiles.getUrl())
+                            .collect(Collectors.toList()))
+                    .region_id(authority.getRegion().getId())
+                    .build();
     }
 
     public Authority authorityDtoToAuthority(AuthorityDto authorityDto) {
